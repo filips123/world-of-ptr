@@ -2,7 +2,8 @@ import * as Phaser from 'phaser';
 import State from "../state/state";
 import Player from "../state/player";
 import features from "../features";
-import {TILE_TYPES} from "../state/state";
+import { TILE_TYPES } from "../state/state";
+import Players from '../features/players';
 
 
 export default function create(wop) {
@@ -20,7 +21,7 @@ export default function create(wop) {
     // use this.add.image(x, y, 'example').setOrigin(0, 0) in order to set the origin to the upper left corner
     // You can access the world tiles using wop.state.worldTiles
 
-    var platforms = this.physics.add.staticGroup();
+    wop.state.state.rockGroup = this.physics.add.staticGroup();
     wop.state.state.mudGroup = this.physics.add.staticGroup();
     wop.state.state.grassGroup = this.physics.add.staticGroup();
     wop.state.state.waterGroup = this.physics.add.staticGroup();
@@ -50,7 +51,7 @@ export default function create(wop) {
             break;
           case TILE_TYPES.OBSTACLE:
             // rock
-            image = platforms.create(x * pixels, y * pixels, 'rock');
+            image = wop.state.state.rockGroup.create(x * pixels, y * pixels, 'rock');
             break;
           case TILE_TYPES.SHOP_TILE:
             // shop
@@ -58,41 +59,25 @@ export default function create(wop) {
             break;
         }
         image.setScale(wop.state.state.tileSize, wop.state.state.tileSize).setOrigin(0, 0).refreshBody();
-        
+
       }
     }
     
-
-//platforms.create(600, 400, 'ground');
-
-    // Background
-    //var bg = this.add.image(1920 / 2 + 160, 1920 / 2 + 160, 'grid');
-    //var bg = this.add.image(1920/2 +160, 1920/2 +160, 'grassA01');
-    //bg.setScale(3, 3);
-
-
-    // Blocks for fun
-    /*
-    wop.blocks = [];
-    for (var i = 0; i < 100; i++) {
-      var block = this.physics.add.image(400 + i * 24, 300, 'block');
-      block.scale = 0.25;
-      wop.blocks.push(block);
-    }
-    */
-
-    // Display FPS:
-    // game.loop.actualFps
-
     for (var featureName in features) {
       features[featureName].create(wop);
     }
 
-    this.physics.add.collider(wop.me.character, platforms);
+    this.physics.add.collider(wop.me.character, wop.state.state.rockGroup);
     this.physics.add.overlap(wop.me.character, wop.state.state.mudGroup);
     this.physics.add.overlap(wop.me.character, wop.state.state.waterGroup);
     this.physics.add.overlap(wop.me.character, wop.state.state.bushGroup);
     this.physics.add.overlap(wop.me.character, wop.state.state.grassGroup);
     this.physics.add.overlap(wop.me.character, wop.state.state.storeGroup);
+  
+    wop.game.scene.run('ui');
+    wop.socket.connect();
+
+    // Don't propagate events for keypresses
+    this.input.keyboard.addCapture(9);
   }
 }

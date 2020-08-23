@@ -22,17 +22,31 @@ export class PlayerJoinMessage extends PlayerMessage {
 }
 
 export class PlayerMoveMessage extends PlayerMessage {
-    constructor(id: string, pos: Vector2, vel: Vector2) {
+    constructor(id: string, pos: Vector2, vel: Vector2, r: boolean) {
         super();
         
         this.type = 'player.move';
         this.id = id;
         this.pos = pos;
         this.vel = vel;
+        this.r = r;
     }
 
     public pos: Vector2;
     public vel: Vector2;
+    public r: boolean;
+}
+
+export class PlayerRotateMessage extends PlayerMessage {
+    constructor(id: string, dir: number) {
+        super();
+
+        this.type = 'player.rotate';
+        this.id = id;
+        this.dir = dir;
+    }
+
+    public dir: number;
 }
 
 export class PlayerLeaveMessage extends PlayerMessage {
@@ -46,18 +60,20 @@ export class PlayerLeaveMessage extends PlayerMessage {
 }
 
 export class PlayerShootMessage extends PlayerMessage {
-    constructor(id: string, pos: Vector2, vel: Vector2, damage: number, lifetime: number){
+    constructor(playerId: string, bulletId: string, pos: Vector2, vel: Vector2, damage: number, lifetime: number){
         super();
         this.type = 'player.shoot';
-        this.id = id;
+        this.id = playerId;
         this.pos = pos;
         this.vel = vel;
         this.damage = damage;
         this.lifetime = lifetime;
+        this.bulletId = bulletId;
     }
 
     public pos: Vector2;
     public vel: Vector2;
+    public bulletId: string;
     public damage: number;
     public lifetime: number;
 }
@@ -71,4 +87,72 @@ export class PlayerNameMessage extends PlayerMessage {
         this.id = id;
         this.name = name;
     }
+}
+
+export class PlayerHealthMessage extends PlayerMessage {
+    constructor(id: string, deltaHealth: number) {
+        super();
+        
+        this.type = 'player.health';
+        this.id = id;
+        this.deltaHealth = deltaHealth;
+    }
+    public deltaHealth: number;
+
+}
+
+export class PlayerRespawnMessage extends PlayerMessage {
+    constructor(id: string, pos: Vector2) {
+        super();
+        
+        this.type = 'player.respawn';
+        this.id = id;
+        this.pos = pos;
+    }
+    public pos: Vector2;
+
+}
+
+export class PlayerDieMessage extends PlayerMessage {
+    constructor(id: string , respawnTime: number) {
+        super();
+
+        this.type = 'player.die';
+        this.id = id;
+        this.respawnTime = respawnTime;
+    }
+    public respawnTime: number;
+
+}
+
+export class PlayerSniperMessage extends PlayerMessage {
+    constructor(id: string, sniperMode: boolean) {
+        super();
+        this.type = 'player.sniper';
+        this.id = id;
+        this.sniperMode = sniperMode;
+    }
+
+    public sniperMode: boolean;
+}
+
+export class BulletHitMessage extends PlayerMessage {
+    constructor(id: string, bulletId: string) {
+        super();
+        this.type = 'bullet.hit';
+        this.id = id;
+        this.bulletId = bulletId;
+    }
+
+    public bulletId: string;
+}
+export class PlayerMentorMessage extends PlayerMessage {
+  constructor(id: string, mentorMode: boolean) {
+    super();
+    this.type = 'player.mentor';
+    this.id = id;
+    this.mentorMode = mentorMode;
+  }
+
+  public mentorMode: boolean;
 }

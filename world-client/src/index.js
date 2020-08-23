@@ -3,12 +3,15 @@ import Socket from "./networking/socket";
 import preload from './wop/preload';
 import create from './wop/create';
 import update from './wop/update';
+import UiScene from './features/ui-scene';
 
 // We'll use wop as a namespace for game objects
 var wop = {
   debug: {},
   debugMode: false,
+  sniperMode: false,
 };
+
 window.wop = wop;
 
 // Prepare Phaser game configuration
@@ -31,9 +34,11 @@ var gameConfig = {
 
 // Create the game
 wop.game = new Phaser.Game(gameConfig);
-
 wop.socket = new Socket(wop);
-wop.socket.connect();
+
+// Add UI scene
+wop.ui = new UiScene();
+wop.game.scene.add('ui', wop.ui, false);
 
 // window resize logika
 window.addEventListener('resize', () => {

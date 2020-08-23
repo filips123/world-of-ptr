@@ -32,6 +32,10 @@ export default class Socket {
       for (var featureName in features) {
         features[featureName].onSocketMessage(wop, message);
       }
+
+      if (wop.ui) {
+        wop.ui.onSocketMessage(wop, message);
+      }
     };
 
     this.socket.onclose = (e) => {
@@ -52,13 +56,13 @@ export default class Socket {
       return false;
     }
 
-    if (!this.socket.readyState) {
+    if (!this.socket || !this.socket.readyState) {
       this.msgQueue.push(msg);
+      return true;
     }
     else {
-      var success = this.socket.send(msg);
+      return this.socket.send(msg);
     }
-    return success;
   };
 
   close() {
