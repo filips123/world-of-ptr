@@ -47,7 +47,6 @@ export default class Chat extends Feature {
 
     inputMessage.onblur = () => {
       //enable keys
-      console.log('blur');
       for (var k in wop.keyActions) wop.keyActions[k].enabled = true;
       wop.inChat = false;
     };
